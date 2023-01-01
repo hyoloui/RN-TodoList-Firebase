@@ -1,4 +1,3 @@
-import { StatusBar } from "expo-status-bar";
 import {
     SafeAreaView,
     ScrollView,
@@ -9,14 +8,30 @@ import {
     View,
 } from "react-native";
 import { AntDesign, FontAwesome, Entypo } from "@expo/vector-icons";
+import { useState } from "react";
 
 export default function App() {
+    const [text, setText] = useState("");
+
+    const [todos, setTodos] = useState([]);
+    console.log(todos);
+
+    const newTodos = {
+        id: Date.now(),
+        text,
+        isDone: false,
+        isEdit: false,
+        category: "javascript",
+    };
+
+    const onSubmitInput = () => {
+        setTodos((prev) => [...prev, newTodos]);
+    };
+
     return (
         // 노치 제거
         <SafeAreaView style={{ flex: 1 }}>
             <View style={styles.container}>
-                {/* 상태바 */}
-                <StatusBar />
                 {/* 고정 영역 */}
                 <View>
                     {/* 버튼 영역 */}
@@ -32,20 +47,25 @@ export default function App() {
                         </TouchableOpacity>
                     </View>
                     {/* input */}
-                    <View style={styles.inpuut_area}>
+                    <View style={styles.input_area}>
                         <TextInput
+                            value={text}
                             style={styles.todo_input}
-                            placeholder={"안녕"}
+                            placeholder={"Enter your task"}
+                            onChangeText={setText}
+                            onSubmitEditing={() => onSubmitInput()}
                         />
                     </View>
                 </View>
                 {/* 스크롤 영역 */}
                 <ScrollView style={styles.scroll_area}>
+                    {/* 한개의 투두 */}
                     <View style={styles.once_todo}>
-                        <Text style={{ fontSize: 18, width: "60%" }}>
-                            안뇽안뇽안뇽안뇽안뇽안뇽dkssdfjikodcsvn안뇽안뇽안뇽안뇽안뇽안뇽dkssdfjikodcsvn
-                        </Text>
+                        {/* 텍스트 */}
+                        <Text style={{ fontSize: 18, width: "60%" }}>안뇽</Text>
+                        {/* 아이콘 영역 */}
                         <View style={styles.once_icon_area}>
+                            {/* 체크 아이콘 (isDone) */}
                             <TouchableOpacity style={styles.once_icon}>
                                 <AntDesign
                                     name="checksquareo"
@@ -53,6 +73,7 @@ export default function App() {
                                     color="black"
                                 />
                             </TouchableOpacity>
+                            {/* 수정 아이콘 (isEdit) */}
                             <TouchableOpacity style={styles.once_icon}>
                                 <Entypo
                                     name="new-message"
@@ -60,6 +81,7 @@ export default function App() {
                                     color="black"
                                 />
                             </TouchableOpacity>
+                            {/* 삭제 아이콘 (delete) */}
                             <TouchableOpacity style={styles.once_icon}>
                                 <FontAwesome
                                     name="trash-o"
@@ -88,7 +110,7 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center",
     },
-    inpuut_area: {
+    input_area: {
         marginVertical: 20,
         paddingVertical: 20,
         borderTopWidth: 1,
