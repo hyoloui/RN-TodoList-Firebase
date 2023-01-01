@@ -10,11 +10,30 @@ import {
 import { AntDesign, FontAwesome, Entypo } from "@expo/vector-icons";
 import { useState } from "react";
 
+// Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+import { getFirestore, collection, addDoc } from "firebase/firestore";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
+const firebaseConfig = {
+    apiKey: "AIzaSyBI3wEXv_M-xkVW8cTpfOzxhPmfmga5Svo",
+    authDomain: "to-do-list-80bac.firebaseapp.com",
+    projectId: "to-do-list-80bac",
+    storageBucket: "to-do-list-80bac.appspot.com",
+    messagingSenderId: "153562437931",
+    appId: "1:153562437931:web:623977977f39b263b14d6e",
+};
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
 export default function App() {
     const [text, setText] = useState("");
 
-    const [todos, setTodos] = useState([]);
-    console.log(todos);
+    // const [todos, setTodos] = useState([]);
+    // console.log(todos);
 
     const newTodos = {
         id: Date.now(),
@@ -24,9 +43,18 @@ export default function App() {
         category: "javascript",
     };
 
-    const onSubmitInput = () => {
-        setTodos((prev) => [...prev, newTodos]);
+    const onSubmitInput = async () => {
+        try {
+            const createDoc = await addDoc(collection(db, "todos"), newTodos);
+            console.log("Document written todos: ", createDoc);
+        } catch (e) {
+            console.error("Error adding todos: ", e);
+        }
     };
+
+    // const onSubmitInput = () => {
+    //     setTodos((prev) => [...prev, newTodos]);
+    // };
 
     return (
         // 노치 제거
