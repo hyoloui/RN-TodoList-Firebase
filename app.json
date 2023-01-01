@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "RN-TodoList-Firebase",
-    "slug": "RN-TodoList-Firebase",
+    "slug": "rn-todolist-firebase",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -28,6 +28,12 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "be6206a4-f4b5-4f17-bcb5-d5ac17686775"
+      }
+    },
+    "owner": "hyoloui"
   }
 }
