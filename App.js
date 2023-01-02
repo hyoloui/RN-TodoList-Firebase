@@ -8,7 +8,7 @@ import {
     View,
 } from "react-native";
 import { AntDesign, FontAwesome, Entypo } from "@expo/vector-icons";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
     onSnapshot,
     query,
@@ -37,11 +37,12 @@ export default function App() {
         createAt: Date.now(),
     };
 
-    // Create API-------------------------------------------------------------------------
+    // Create API--------------------------------------------------
     const onSubmitInput = async () => {
         try {
             const createDoc = await addDoc(collection(db, "todos"), newTodos);
             console.log("Document written todos: ", createDoc);
+            setText(""); // input
         } catch (e) {
             console.error("Error adding todos: ", e);
         }
@@ -50,11 +51,24 @@ export default function App() {
     //     setTodos((prev) => [...prev, newTodos]);
     // };
 
-    // Read API-------------------------------------------------------------------------
+    // Read API---------------------------------------------------
+    useEffect(() => {
+        const q = query(collection(db, "todos"), orderBy("createAt", "desc"));
+        onSnapshot(q, (snapshot) => {
+            const newTodos = snapshot.docs.map((doc) => {
+                const newTodo = {
+                    id: doc.id,
+                    ...doc.data(),
+                };
+                return newTodo;
+            });
+            setTodos(newTodos);
+        });
+    }, []);
 
-    // Update API-------------------------------------------------------------------------
+    // Update API--------------------------------------------------
 
-    // Delete API-------------------------------------------------------------------------
+    // Delete API--------------------------------------------------
 
     return (
         // 노치 제거
@@ -112,38 +126,44 @@ export default function App() {
                 </View>
                 {/* 스크롤 영역 */}
                 <ScrollView style={styles.scroll_area}>
-                    {/* 한개의 투두 */}
-                    <View style={styles.once_todo}>
-                        {/* 텍스트 */}
-                        <Text style={{ fontSize: 18, width: "60%" }}>안뇽</Text>
-                        {/* 아이콘 영역 */}
-                        <View style={styles.once_icon_area}>
-                            {/* 체크 아이콘 (isDone) */}
-                            <TouchableOpacity style={styles.once_icon}>
-                                <AntDesign
-                                    name="checksquareo"
-                                    size={30}
-                                    color="black"
-                                />
-                            </TouchableOpacity>
-                            {/* 수정 아이콘 (isEdit) */}
-                            <TouchableOpacity style={styles.once_icon}>
-                                <Entypo
-                                    name="new-message"
-                                    size={30}
-                                    color="black"
-                                />
-                            </TouchableOpacity>
-                            {/* 삭제 아이콘 (delete) */}
-                            <TouchableOpacity style={styles.once_icon}>
-                                <FontAwesome
-                                    name="trash-o"
-                                    size={30}
-                                    color="black"
-                                />
-                            </TouchableOpacity>
-                        </View>
-                    </View>
+                    {todos.map((todo) => {
+                        return (
+                            /* 한개의 투두 */
+                            <View key={todo.id} style={styles.once_todo}>
+                                {/* 텍스트 */}
+                                <Text style={{ fontSize: 18, width: "60%" }}>
+                                    {todo.text}
+                                </Text>
+                                {/* 아이콘 영역 */}
+                                <View style={styles.once_icon_area}>
+                                    {/* 체크 아이콘 (isDone) */}
+                                    <TouchableOpacity style={styles.once_icon}>
+                                        <AntDesign
+                                            name="checksquareo"
+                                            size={30}
+                                            color="black"
+                                        />
+                                    </TouchableOpacity>
+                                    {/* 수정 아이콘 (isEdit) */}
+                                    <TouchableOpacity style={styles.once_icon}>
+                                        <Entypo
+                                            name="new-message"
+                                            size={30}
+                                            color="black"
+                                        />
+                                    </TouchableOpacity>
+                                    {/* 삭제 아이콘 (delete) */}
+                                    <TouchableOpacity style={styles.once_icon}>
+                                        <FontAwesome
+                                            name="trash-o"
+                                            size={30}
+                                            color="black"
+                                        />
+                                    </TouchableOpacity>
+                                </View>
+                            </View>
+                        );
+                    })}
                 </ScrollView>
             </View>
         </SafeAreaView>
