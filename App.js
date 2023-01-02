@@ -25,9 +25,8 @@ import { db } from "./Firebase";
 
 export default function App() {
     const [text, setText] = useState("");
-
-    // const [todos, setTodos] = useState([]);
-    // console.log(todos);
+    const [todos, setTodos] = useState([]);
+    const [category, setCategory] = useState("javascript");
 
     const newTodos = {
         id: Date.now(),
@@ -38,6 +37,7 @@ export default function App() {
         createAt: Date.now(),
     };
 
+    // Create API-------------------------------------------------------------------------
     const onSubmitInput = async () => {
         try {
             const createDoc = await addDoc(collection(db, "todos"), newTodos);
@@ -46,10 +46,15 @@ export default function App() {
             console.error("Error adding todos: ", e);
         }
     };
-
     // const onSubmitInput = () => {
     //     setTodos((prev) => [...prev, newTodos]);
     // };
+
+    // Read API-------------------------------------------------------------------------
+
+    // Update API-------------------------------------------------------------------------
+
+    // Delete API-------------------------------------------------------------------------
 
     return (
         // 노치 제거
@@ -59,13 +64,38 @@ export default function App() {
                 <View>
                     {/* 버튼 영역 */}
                     <View style={styles.buttonArea}>
-                        <TouchableOpacity style={styles.category_btn}>
+                        <TouchableOpacity
+                            style={{
+                                ...styles.category_btn,
+                                backgroundColor:
+                                    category === "javascript"
+                                        ? "#f5aa42"
+                                        : "#ccc",
+                            }}
+                            onPress={() => setCategory("javascript")}
+                        >
                             <Text style={{ fontSize: 20 }}>Javascript</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity style={styles.category_btn}>
+                        <TouchableOpacity
+                            style={{
+                                ...styles.category_btn,
+                                backgroundColor:
+                                    category === "react" ? "#f5aa42" : "#ccc",
+                            }}
+                            onPress={() => setCategory("react")}
+                        >
                             <Text style={{ fontSize: 20 }}>React</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity style={styles.category_btn}>
+                        <TouchableOpacity
+                            style={{
+                                ...styles.category_btn,
+                                backgroundColor:
+                                    category === "coding-test"
+                                        ? "#f5aa42"
+                                        : "#ccc",
+                            }}
+                            onPress={() => setCategory("coding-test")}
+                        >
                             <Text style={{ fontSize: 20 }}>Coding test</Text>
                         </TouchableOpacity>
                     </View>
@@ -146,7 +176,7 @@ const styles = StyleSheet.create({
     },
     //
     scroll_area: {
-        backgroundColor: "red",
+        flex: 1,
     },
     once_todo: {
         padding: 10,
