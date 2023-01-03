@@ -27,9 +27,10 @@ export default function App() {
     const [text, setText] = useState("");
     const [todos, setTodos] = useState([]);
     const [category, setCategory] = useState("javascript");
+    const [editText, setEditText] = useState("");
 
-    const newTodos = {
-        id: Date.now(),
+    const newTodo = {
+        // id: Date.now(),
         text,
         isDone: false,
         isEdit: false,
@@ -40,8 +41,7 @@ export default function App() {
     // Create API--------------------------------------------------
     const onSubmitInput = async () => {
         try {
-            const createDoc = await addDoc(collection(db, "todos"), newTodos);
-            console.log("Document written todos: ", createDoc);
+            await addDoc(collection(db, "todos"), newTodo);
             setText(""); // input
         } catch (e) {
             console.error("Error adding todos: ", e);
@@ -67,6 +67,21 @@ export default function App() {
     }, []);
 
     // Update API--------------------------------------------------
+    const setDone = async (id) => {
+        const find = todos.findIndex((todo) => todo.id === id);
+        await updateDoc(doc(db, "todos", id), { isDone: !todos[find].isDone });
+    };
+
+    const setEdit = async (id) => {
+        const find = todos.findIndex((todo) => todo.id === id);
+        await updateDoc(doc(db, "todos", id), { isEdit: !todos[find].isEdit });
+    };
+    const editTodo = async (id) => {
+        await updateDoc(doc(db, "todos", id), {
+            text: editText,
+            isEdit: false,
+        });
+    };
 
     // Delete API--------------------------------------------------
 
@@ -131,17 +146,38 @@ export default function App() {
                             return (
                                 /* 한개의 투두 */
                                 <View key={todo.id} style={styles.once_todo}>
-                                    {/* 텍스트 */}
-                                    <Text
-                                        style={{ fontSize: 18, width: "60%" }}
-                                    >
-                                        {todo.text}
-                                    </Text>
+                                    {todo.isEdit ? (
+                                        <TextInput
+                                            defaultValue={todo.text}
+                                            onChangeText={setEditText}
+                                            onSubmitEditing={() => {
+                                                editTodo(todo.id);
+                                            }}
+                                            style={{
+                                                flex: 1,
+                                                backgroundColor: "white",
+                                                fontSize: 18,
+                                            }}
+                                        />
+                                    ) : (
+                                        <Text
+                                            style={{
+                                                fontSize: 18,
+                                                width: "60%",
+                                                textDecorationLine: todo.isDone
+                                                    ? "line-through"
+                                                    : "none",
+                                            }}
+                                        >
+                                            {todo.text}
+                                        </Text>
+                                    )}
                                     {/* 아이콘 영역 */}
                                     <View style={styles.once_icon_area}>
                                         {/* 체크 아이콘 (isDone) */}
                                         <TouchableOpacity
                                             style={styles.once_icon}
+                                            onPress={() => setDone(todo.id)}
                                         >
                                             <AntDesign
                                                 name="checksquareo"
@@ -152,6 +188,7 @@ export default function App() {
                                         {/* 수정 아이콘 (isEdit) */}
                                         <TouchableOpacity
                                             style={styles.once_icon}
+                                            onPress={() => setEdit(todo.id)}
                                         >
                                             <Entypo
                                                 name="new-message"
@@ -162,6 +199,7 @@ export default function App() {
                                         {/* 삭제 아이콘 (delete) */}
                                         <TouchableOpacity
                                             style={styles.once_icon}
+                                            onPress={() => setDelete(todo.id)}
                                         >
                                             <FontAwesome
                                                 name="trash-o"
