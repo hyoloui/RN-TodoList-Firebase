@@ -33,7 +33,7 @@ export default function App() {
         text,
         isDone: false,
         isEdit: false,
-        category: "javascript",
+        category,
         createAt: Date.now(),
     };
 
@@ -127,42 +127,52 @@ export default function App() {
                 {/* 스크롤 영역 */}
                 <ScrollView style={styles.scroll_area}>
                     {todos.map((todo) => {
-                        return (
-                            /* 한개의 투두 */
-                            <View key={todo.id} style={styles.once_todo}>
-                                {/* 텍스트 */}
-                                <Text style={{ fontSize: 18, width: "60%" }}>
-                                    {todo.text}
-                                </Text>
-                                {/* 아이콘 영역 */}
-                                <View style={styles.once_icon_area}>
-                                    {/* 체크 아이콘 (isDone) */}
-                                    <TouchableOpacity style={styles.once_icon}>
-                                        <AntDesign
-                                            name="checksquareo"
-                                            size={30}
-                                            color="black"
-                                        />
-                                    </TouchableOpacity>
-                                    {/* 수정 아이콘 (isEdit) */}
-                                    <TouchableOpacity style={styles.once_icon}>
-                                        <Entypo
-                                            name="new-message"
-                                            size={30}
-                                            color="black"
-                                        />
-                                    </TouchableOpacity>
-                                    {/* 삭제 아이콘 (delete) */}
-                                    <TouchableOpacity style={styles.once_icon}>
-                                        <FontAwesome
-                                            name="trash-o"
-                                            size={30}
-                                            color="black"
-                                        />
-                                    </TouchableOpacity>
+                        if (category === todo.category) {
+                            return (
+                                /* 한개의 투두 */
+                                <View key={todo.id} style={styles.once_todo}>
+                                    {/* 텍스트 */}
+                                    <Text
+                                        style={{ fontSize: 18, width: "60%" }}
+                                    >
+                                        {todo.text}
+                                    </Text>
+                                    {/* 아이콘 영역 */}
+                                    <View style={styles.once_icon_area}>
+                                        {/* 체크 아이콘 (isDone) */}
+                                        <TouchableOpacity
+                                            style={styles.once_icon}
+                                        >
+                                            <AntDesign
+                                                name="checksquareo"
+                                                size={30}
+                                                color="black"
+                                            />
+                                        </TouchableOpacity>
+                                        {/* 수정 아이콘 (isEdit) */}
+                                        <TouchableOpacity
+                                            style={styles.once_icon}
+                                        >
+                                            <Entypo
+                                                name="new-message"
+                                                size={30}
+                                                color="black"
+                                            />
+                                        </TouchableOpacity>
+                                        {/* 삭제 아이콘 (delete) */}
+                                        <TouchableOpacity
+                                            style={styles.once_icon}
+                                        >
+                                            <FontAwesome
+                                                name="trash-o"
+                                                size={30}
+                                                color="black"
+                                            />
+                                        </TouchableOpacity>
+                                    </View>
                                 </View>
-                            </View>
-                        );
+                            );
+                        }
                     })}
                 </ScrollView>
             </View>
