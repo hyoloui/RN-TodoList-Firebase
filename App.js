@@ -1,4 +1,5 @@
 import {
+    Alert,
     SafeAreaView,
     ScrollView,
     StyleSheet,
@@ -84,6 +85,24 @@ export default function App() {
     };
 
     // Delete API--------------------------------------------------
+    const setDelete = (id) => {
+        Alert.alert("해당 todo를 삭제합니다", "정말 삭제하시겠습니까?", [
+            {
+                text: "취소",
+                style: "cancel",
+                onPress: () => {
+                    console.log("취소");
+                },
+            },
+            {
+                text: "삭제",
+                style: "destructive",
+                onPress: async () => {
+                    await deleteDoc(doc(db, "todos", id));
+                },
+            },
+        ]);
+    };
 
     return (
         // 노치 제거
